@@ -31,7 +31,7 @@ enum AlarmCategory: String, Codable, CaseIterable{
         case .study:
             return .yellow
         case .project:
-            return .cyan.withAlphaComponent(0.7)
+            return .cyan
         case .custom:
             return .gray
         }

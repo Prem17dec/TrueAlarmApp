@@ -12,9 +12,16 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: [SortDescriptor(\Alarm.scheduledTime, order: .forward)]) private var alarms: [Alarm]
+    
+    @State private var viewModel = AlarmListViewModel()
+    
+    @State private var isShowingAddAlarmSheet = false
+    
+    @State private var quickAlarmDate: Date?
 
     var body: some View {
         NavigationStack {
+            
             List {
                 
                 if(alarms.isEmpty){
@@ -35,82 +42,55 @@ struct ContentView: View {
                     EditButton()
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    
-                    //Actual Button
-                    Button{
-                        if(alarms.isEmpty){
-                            generateDummyAlarms()
+                                        
+                    //Add Button
+                    HStack {
+                        Button{
+                            
+                            quickAlarmDate = nil
+                            isShowingAddAlarmSheet = true
+                            
+                        } label: {
+                            
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title3)
                         }
-                        
-                    } label: {
-                        Label("Add Alarm", systemImage: "plus.circle.fill")
+                        .simultaneousGesture(
+                            
+                            LongPressGesture(minimumDuration: 0.5)
+                                .onEnded{ _ in
+                                    
+                                    var components = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+                                    
+                                    components.day! += 1
+                                    components.hour = 7
+                                    components.minute = 0
+                                    
+                                    quickAlarmDate = Calendar.current.date(from: components) ?? Date()
+                                    
+                                    isShowingAddAlarmSheet = true
+                                }
+                        )
                     }
                 }
             }
+            .sheet(isPresented: $isShowingAddAlarmSheet) {
+                
+                AddAlarmView(quickAlarmDate: $quickAlarmDate)
+            }
+//            .task {
+//                if alarms.isEmpty {
+//                    viewModel.generateDummyAlarms(context: modelContext)
+//                }
+//            }
         }
     }
     
-    private func generateDummyAlarms(){
-        
-        //Flight
-        let flightTime = Calendar.current.date(byAdding: .day, value: 7, to: Date())!
-        
-        let flightAlarm = Alarm(
-            scheduledTime: flightTime,
-            title: "Flight to India",
-            note: "Don't forget your passport and boarding pass",
-            category: .travel,
-            isCritical: true,
-            quickActionType: .openURL,
-            quickActionTarget: "https://www.airindia.in/"
-        )
-        
-        modelContext.insert(flightAlarm)
-        
-        //Bills
-        let billsTime = Calendar.current.date(byAdding: .day, value: 30, to: Date())!
-        
-        let billsAlarm = Alarm(
-            scheduledTime: billsTime,
-            title: "Credit card payments",
-            note: "Must pay by end of the month",
-            category: .bills,
-            isCritical: true,
-            isRepeating: true,
-            quickActionType: .none
-        )
-
-        modelContext.insert(billsAlarm)
-        
-        //Message
-        let callTime = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-        
-        let standupCallAlarm = Alarm(
-            scheduledTime: callTime,
-            title: "Stand up Call",
-            note: "Week day 10:00 - 10:20 CST",
-            category: .project,
-            isCritical: true,
-            isRepeating: true,
-            quickActionType: .openApp,
-            quickActionTarget: "Stand up on zoom."
-        )
-        
-        modelContext.insert(standupCallAlarm)
-    }
-
-    private func addAlarm() {
-        withAnimation {
-//            let newItem = Item(timestamp: Date())
-//            modelContext.insert(newItem)
-        }
-    }
-
     private func deleteAlarm(offsets: IndexSet) {
         withAnimation {
-            for index in offsets {
-                modelContext.delete(alarms[index])
-            }
+            
+            viewModel.deleteAlarms(offsets: offsets, alarms: alarms, context: modelContext)
+
         }
     }
 }
