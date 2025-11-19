@@ -49,6 +49,7 @@ final class AddAlarmViewModel{
             note: note.isEmpty ? nil : note.trimmingCharacters(in: .whitespacesAndNewlines),
             category: category,
             isCritical: isCritical,
+            isRepeating: isRepeating,
             isSnoozeEnabled: isSnoozeEnabled,
             quickActionType: quickActionType,
             quickActionTarget: quickActionTarget.isEmpty ? nil : quickActionTarget
@@ -56,6 +57,9 @@ final class AddAlarmViewModel{
         
         DispatchQueue.main.async {
             context.insert(newAlarm)
+            
+            //Schedule system notification
+            NotificationService.shared.schedule(alarm: newAlarm)
         }
     }
 }

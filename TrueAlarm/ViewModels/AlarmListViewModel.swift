@@ -11,10 +11,15 @@ import SwiftData
 @Observable
 final class AlarmListViewModel {
     
+    //Delete alarm by swipe
     func deleteAlarms(offsets: IndexSet, alarms: [Alarm], context: ModelContext) {
         
         DispatchQueue.main.async {
             for index in offsets {
+                
+                //Cancel notification before deletion
+                NotificationService.shared.cancel(alarm: alarms[index])
+                
                 context.delete(alarms[index])
             }
         }
@@ -33,11 +38,15 @@ final class AlarmListViewModel {
                 note: "Don't forget your passport and boarding pass",
                 category: .travel,
                 isCritical: true,
+                isRepeating: false,
+                isSnoozeEnabled: false,
                 quickActionType: .openURL,
                 quickActionTarget: "https://www.airindia.in/"
             )
             
             context.insert(flightAlarm)
+            //Add system notification
+            NotificationService.shared.schedule(alarm: flightAlarm)
             
             //Bills
             let billsTime = Calendar.current.date(byAdding: .day, value: 30, to: Date())!
@@ -49,10 +58,15 @@ final class AlarmListViewModel {
                 category: .bills,
                 isCritical: true,
                 isRepeating: true,
-                quickActionType: .none
+                isSnoozeEnabled: true,
+                quickActionType: .none,
+                quickActionTarget: nil
             )
             
             context.insert(billsAlarm)
+            //Add system notification
+            NotificationService.shared.schedule(alarm: billsAlarm)
+
             
             //Message
             let callTime = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
@@ -64,11 +78,15 @@ final class AlarmListViewModel {
                 category: .project,
                 isCritical: true,
                 isRepeating: true,
+                isSnoozeEnabled: false,
                 quickActionType: .openApp,
-                quickActionTarget: "Stand up on zoom."
+                quickActionTarget: "Zoom"
             )
             
             context.insert(standupCallAlarm)
+            //Add system notification
+            NotificationService.shared.schedule(alarm: standupCallAlarm)
+
         }
     }
     
