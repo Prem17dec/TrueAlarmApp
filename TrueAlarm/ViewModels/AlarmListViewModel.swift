@@ -40,6 +40,7 @@ final class AlarmListViewModel {
                 isCritical: true,
                 isRepeating: false,
                 isSnoozeEnabled: false,
+                soundName: "india",
                 quickActionType: .openURL,
                 quickActionTarget: "https://www.airindia.in/"
             )
@@ -59,6 +60,7 @@ final class AlarmListViewModel {
                 isCritical: true,
                 isRepeating: true,
                 isSnoozeEnabled: true,
+                soundName: "clock",
                 quickActionType: .none,
                 quickActionTarget: nil
             )
@@ -79,6 +81,7 @@ final class AlarmListViewModel {
                 isCritical: true,
                 isRepeating: true,
                 isSnoozeEnabled: false,
+                soundName: "alarm",
                 quickActionType: .openApp,
                 quickActionTarget: "Zoom"
             )

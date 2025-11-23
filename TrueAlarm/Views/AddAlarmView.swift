@@ -35,12 +35,18 @@ struct AddAlarmView: View {
                     TextField("Title (e.g., Boarding Time)",
                               text: $viewModel.title
                     ).textInputAutocapitalization(.words)
-                     
-                    
                     TextField("Note (Optional)",
                               text: $viewModel.note,
                               axis: .vertical
                     ).textInputAutocapitalization(.sentences)
+                    
+                    Picker("Sound", selection: $viewModel.soundName){
+                        
+                        ForEach(viewModel.availableSounds, id: \.self){ sound in
+                            Text(sound.replacingOccurrences(of: "_", with: " ").capitalized).tag(sound)
+                        }
+                    }
+                    
                 }
                 
                 Section("Priority & Classification"){
@@ -78,7 +84,7 @@ struct AddAlarmView: View {
                     Picker("Action Type", selection: $viewModel.quickActionType){
                         
                         ForEach(ActionType.allCases, id: \.self){action in
-                        
+                            
                             Text(action.rawValue).tag(action)
                         }
                     }
@@ -98,7 +104,7 @@ struct AddAlarmView: View {
                 .buttonStyle(.borderedProminent)
                 .disabled(!viewModel.isTitleValid)
             }
-            .navigationTitle(quickAlarmDate != nil ? "Quick Alarm" : "New True Alarm")
+            .navigationTitle("New True Alarm")
             .toolbar{
                 ToolbarItem(placement: .topBarLeading){
                     Button("Cancel"){

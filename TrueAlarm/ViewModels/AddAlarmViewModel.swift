@@ -11,6 +11,9 @@ import SwiftData
 @Observable
 final class AddAlarmViewModel{
     
+    //Mock sounds
+    let availableSounds = ["alarm", "india", "clock"]
+    
     var scheduledTime: Date
     var title: String = ""
     var note: String = ""
@@ -20,6 +23,8 @@ final class AddAlarmViewModel{
     
     var isRepeating: Bool = false
     var isSnoozeEnabled: Bool = false
+    
+    var soundName: String = "india"
     
     var quickActionType: ActionType = .none
     var quickActionTarget: String = ""
@@ -51,6 +56,7 @@ final class AddAlarmViewModel{
             isCritical: isCritical,
             isRepeating: isRepeating,
             isSnoozeEnabled: isSnoozeEnabled,
+            soundName: soundName,
             quickActionType: quickActionType,
             quickActionTarget: quickActionTarget.isEmpty ? nil : quickActionTarget
         )

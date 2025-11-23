@@ -21,12 +21,14 @@ final class Alarm {
     var isRepeating: Bool
     var isSnoozeEnabled: Bool
     
+    var soundName: String
     var quickActionType: ActionType
     var quickActionTarget: String?
     
     init(scheduledTime: Date, title: String, note: String? = nil, category: AlarmCategory,
     isCritical: Bool, isRepeating: Bool = false, isSnoozeEnabled: Bool = false,
-         quickActionType: ActionType, quickActionTarget: String? = nil) {
+         soundName: String = "india", quickActionType: ActionType,
+         quickActionTarget: String? = nil) {
         self.id = UUID()
         self.scheduledTime = scheduledTime
         self.title = title
@@ -35,6 +37,7 @@ final class Alarm {
         self.isCritical = isCritical
         self.isRepeating = isRepeating
         self.isSnoozeEnabled = isSnoozeEnabled
+        self.soundName = soundName
         self.quickActionType = quickActionType
         self.quickActionTarget = quickActionTarget
     }

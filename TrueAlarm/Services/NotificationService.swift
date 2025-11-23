@@ -7,12 +7,26 @@
 
 import Foundation
 import UserNotifications
+import UIKit
+import SwiftData
 
 final class NotificationService{
     
     static let shared = NotificationService()
     
-    private init() {}
+    private let delegate: NotificationDelegate
+    
+    private init() {
+        self.delegate = NotificationDelegate()
+        
+        self.delegate.parentService = self
+    }
+    
+    private var modelContainer: ModelContainer?
+    
+    func setup(with container: ModelContainer){
+        self.modelContainer = container
+    }
     
     func requestAuthorization() {
         
@@ -41,7 +55,7 @@ final class NotificationService{
         let content = UNMutableNotificationContent()
         content.title = alarm.title
         content.body = alarm.note ?? "Scheduled Alarm"
-        content.sound = .default
+        content.sound = nil
         
         if alarm.isCritical {
             content.interruptionLevel = .critical
@@ -100,22 +114,22 @@ final class NotificationService{
     //Dummy delegate
     private final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         
+        weak var parentService: NotificationService?
+        
         //When notification is in foreground
         func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
             
-            return [.banner, .sound, .badge]
+            await self.handleAlarmTrigger(notification: notification)
+            return [.banner]
         }
         
         //When user interacts with notification
         func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
             
+            await self.handleAlarmTrigger(notification: response.notification)
+            
             print( "User responded to notification: \(response.notification.request.identifier)")
             
-            let userInfo = response.notification.request.content.userInfo
-            
-            if let alarmID = userInfo["alarmID"] as? String{
-                print("Alarm ID associated with this notification is: \(alarmID)")
-            }
             
             switch response.actionIdentifier {
                 
@@ -129,6 +143,40 @@ final class NotificationService{
                 print("Custom action identifier: \(response.actionIdentifier) ")
             }
         }
+        
+        private func handleAlarmTrigger(notification: UNNotification) async {
+            
+            let userInfo = notification.request.content.userInfo
+            
+            guard let alarmIDString = userInfo["alarmID"] as? String,
+                  let alarmID = UUID(uuidString: alarmIDString) else{
+                
+                print("Couldn't extract alarmID from notification userInfo")
+                return
+            }
+            
+            guard let container = parentService?.modelContainer else {
+                
+                print("Model Container not set up in Notification Service")
+                return
+            }
+            
+            do{
+                let context = ModelContext(container)
+                let predicate = #Predicate<Alarm> { $0.id == alarmID}
+                
+                let descriptor = FetchDescriptor(predicate: predicate)
+                
+                guard let alarm = try context.fetch(descriptor).first else {
+                    print("Couldn't find Alarm with \(alarmIDString) in Swift Data")
+                    return
+                }
+                
+                AudioService.shared.startAlarm(soundName: alarm.soundName)
+            }
+            catch {
+                print("Error fetching Alarm from Swift Data: \(error)")
+            }
+        }
     }
-    private let delegate = NotificationDelegate()
 }
