@@ -26,11 +26,14 @@ struct AddAlarmView: View {
     }
     
     var body: some View {
+        
+        let dateRange = Date.now...
+        
         NavigationStack {
             Form {
                 Section("Alarm Details"){
                     
-                    DatePicker("When?", selection: $viewModel.scheduledTime, displayedComponents: [.date, .hourAndMinute]).datePickerStyle(.compact)
+                    DatePicker("When?", selection: $viewModel.scheduledTime, in: dateRange, displayedComponents: [.date, .hourAndMinute]).datePickerStyle(.compact)
                     
                     TextField("Title (e.g., Boarding Time)",
                               text: $viewModel.title

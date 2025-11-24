@@ -24,7 +24,7 @@ final class AddAlarmViewModel{
     var isRepeating: Bool = false
     var isSnoozeEnabled: Bool = false
     
-    var soundName: String = "india"
+    var soundName: String = "alarm"
     
     var quickActionType: ActionType = .none
     var quickActionTarget: String = ""

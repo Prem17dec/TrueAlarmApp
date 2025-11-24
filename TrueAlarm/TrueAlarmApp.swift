@@ -32,9 +32,9 @@ struct TrueAlarmApp: App {
   
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TimelineView()
                 .preferredColorScheme(.dark)
         }
-        .modelContainer(for: Alarm.self)
+        .modelContainer(sharedModelContainer)
     }
 }

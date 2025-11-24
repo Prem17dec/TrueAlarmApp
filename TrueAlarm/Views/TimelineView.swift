@@ -16,13 +16,11 @@ struct TimelineView: View {
     @Query(sort: [SortDescriptor(\Alarm.scheduledTime, order: .forward)]) private var alarms: [Alarm]
     
     @State private var viewModel = AlarmListViewModel()
-    
-    @StateObject private var audioService = AudioService.shared
-    
     @State private var isShowingAddAlarmSheet = false
     @State private var quickAlarmDate: Date?
 
-    
+    @StateObject private var audioService = AudioService.shared
+
     var body: some View {
         
         NavigationStack {
@@ -70,26 +68,31 @@ struct TimelineView: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button{
-                        
-                        quickAlarmDate = nil
-                        isShowingAddAlarmSheet = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                    }
-                    .simultaneousGesture(LongPressGesture(minimumDuration: 0.5)
-                        .onEnded { _ in
-                            var components = Calendar.current.dateComponents([.year, .month, .day], from: Date())
-                            
-                            components.day! += 1
-                            components.hour = 0
-                            components.minute = 0
-                            
-                            quickAlarmDate = Calendar.current.date(from: components) ?? Date()
-                            isShowingAddAlarmSheet = true
+                    HStack {
+                        Button("Mock Data"){
+                            viewModel.generateDummyAlarms(context: modelContext)
                         }
-                    )
+                        Button{
+                            
+                            quickAlarmDate = nil
+                            isShowingAddAlarmSheet = true
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title2)
+                        }
+                        .simultaneousGesture(LongPressGesture(minimumDuration: 0.5)
+                            .onEnded { _ in
+                                var components = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+                                
+                                components.day! += 1
+                                components.hour = 0
+                                components.minute = 0
+                                
+                                quickAlarmDate = Calendar.current.date(from: components) ?? Date()
+                                isShowingAddAlarmSheet = true
+                            }
+                        )
+                    }
                 }
             }
         }

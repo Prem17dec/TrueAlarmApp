@@ -30,7 +30,7 @@ final class AlarmListViewModel {
         DispatchQueue.main.async {
             
             //Flight
-            let flightTime = Calendar.current.date(byAdding: .day, value: 7, to: Date())!
+            let flightTime = Calendar.current.date(byAdding: .minute, value: 1, to: Date())!
             
             let flightAlarm = Alarm(
                 scheduledTime: flightTime,
@@ -50,7 +50,7 @@ final class AlarmListViewModel {
             NotificationService.shared.schedule(alarm: flightAlarm)
             
             //Bills
-            let billsTime = Calendar.current.date(byAdding: .day, value: 30, to: Date())!
+            let billsTime = Calendar.current.date(byAdding: .minute, value: 3, to: Date())!
             
             let billsAlarm = Alarm(
                 scheduledTime: billsTime,
@@ -71,7 +71,7 @@ final class AlarmListViewModel {
 
             
             //Message
-            let callTime = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+            let callTime = Calendar.current.date(byAdding: .minute, value: 2, to: Date())!
             
             let standupCallAlarm = Alarm(
                 scheduledTime: callTime,

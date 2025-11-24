@@ -55,7 +55,10 @@ final class NotificationService{
         let content = UNMutableNotificationContent()
         content.title = alarm.title
         content.body = alarm.note ?? "Scheduled Alarm"
-        content.sound = nil
+        
+        let soundFile = "\(alarm.soundName).mp3"
+        
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFile))
         
         if alarm.isCritical {
             content.interruptionLevel = .critical
