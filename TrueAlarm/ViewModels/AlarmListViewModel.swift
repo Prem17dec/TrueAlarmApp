@@ -40,7 +40,7 @@ final class AlarmListViewModel {
                 isCritical: true,
                 isRepeating: false,
                 isSnoozeEnabled: false,
-                soundName: "india",
+                soundName: "TrueAlarm_Ring",
                 quickActionType: .openURL,
                 quickActionTarget: "https://www.airindia.in/"
             )

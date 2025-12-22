@@ -42,11 +42,11 @@ final class AudioService:NSObject, ObservableObject, AVAudioPlayerDelegate {
             
             //If user selected alarm is not found, fallback to default alarm.
             
-            if soundName != "india" {
+            if soundName != "TrueAlarm_Ring" {
                 
-                if Bundle.main.url(forResource: "india", withExtension: "mp3") != nil {
+                if Bundle.main.url(forResource: "TrueAlarm_Ring", withExtension: "mp3") != nil {
                     
-                    return loadSound(soundName: "india")
+                    return loadSound(soundName: "TrueAlarm_Ring")
                 }
             }
             print("Default sound not found")

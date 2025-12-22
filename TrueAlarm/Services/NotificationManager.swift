@@ -10,13 +10,13 @@ import UserNotifications
 import UIKit
 import SwiftData
 
-final class NotificationManager: NSObject, UNUserNotificationCenterDelegate{
+final class NotificationService{
     
-    static let shared = NotificationManager()
+    static let shared = NotificationService()
     
     private let delegate: NotificationDelegate
     
-    private override init() {
+    private init() {
         self.delegate = NotificationDelegate()
         
         self.delegate.parentService = self
@@ -117,7 +117,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate{
     //Dummy delegate
     private final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         
-        weak var parentService: NotificationManager?
+        weak var parentService: NotificationService?
         
         //When notification is in foreground
         func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
@@ -186,6 +186,8 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate{
 
 
 /*
+ 
+ // MARK: - Notification Manager Class
  class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
  
  static let shared = NotificationManager()

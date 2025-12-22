@@ -12,7 +12,7 @@ import SwiftData
 final class AddAlarmViewModel{
     
     //Mock sounds
-    let availableSounds = ["alarm", "india", "clock"]
+    let availableSounds = ["alarm", "india", "clock", "TrueAlarm_Ring"]
     
     var scheduledTime: Date
     var title: String = ""

@@ -27,7 +27,7 @@ final class Alarm {
     
     init(scheduledTime: Date, title: String, note: String? = nil, category: AlarmCategory,
     isCritical: Bool, isRepeating: Bool = false, isSnoozeEnabled: Bool = false,
-         soundName: String = "india", quickActionType: ActionType,
+         soundName: String = "TrueAlarm_Ring", quickActionType: ActionType,
          quickActionTarget: String? = nil) {
         self.id = UUID()
         self.scheduledTime = scheduledTime
